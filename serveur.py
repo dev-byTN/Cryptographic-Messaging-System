@@ -9,7 +9,7 @@ def handle_client(conn, addr):
         if not msg:
             break
         print(f"{addr} dit : {msg}")
-        addr.send(msg)
+        conn.send(msg.encode())
     conn.close()
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
