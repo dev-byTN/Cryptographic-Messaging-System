@@ -1,24 +1,51 @@
 import socket
 import threading
 
-def handle_client(conn, addr):
+def handle_client(conn, addr, list):
     
-    print(f"[Nouveau client] {addr}")
+    print(f"{addr} Joined the chat")
     while True:
         msg = conn.recv(1024).decode()
         if not msg:
             break
-        print(f"{addr} dit : {msg}")
-        conn.send(msg.encode())
+        print(f"{addr}: {msg}")
+        for i in list:
+            try:
+            	i.send(msg.encode())
+            except:
+            	pass
+            	
+    list.remov(conn)
     conn.close()
+    
+def show_history_message(conn, addr, list):
+    
+    while True:
+        msg = conn.recv(1024).decode()
+        if not msg:
+            break
+        for client in list:
+            try:
+                client.send(msg.encode())
+            except:
+                pass
 
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind(("127.0.0.1", 5000))
-server.listen()
+    conn.close()
+    listUser.remove(conn)
 
-print("Serveur en écoute...")
+    
+if __name__ == "__main__":
 
-while True:
-    conn, addr = server.accept()
-    thread = threading.Thread(target=handle_client, args=(conn, addr))
-    thread.start()
+	server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	server.bind(("127.0.0.1", 5000))
+	server.listen()
+
+	print("New chat created\n")
+
+	listUser = []
+
+	while True:
+	    conn, addr = server.accept()
+	    listUser.append(conn)
+	    thread1 = threading.Thread(target=handle_client, args=(conn, addr, listUser))
+	    thread1.start()
