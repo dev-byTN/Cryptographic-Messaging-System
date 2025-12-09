@@ -15,7 +15,7 @@ def handle_client(conn, addr, list):
             except:
             	pass
             	
-    list.remov(conn)
+    list.remove(conn)
     conn.close()
     
 def show_history_message(conn, addr, list):
